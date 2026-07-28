@@ -263,12 +263,13 @@ Ticket 2 - Ana Cruz"
       </form>
     </section>
 
-<section class="section merch-section" id="merch">
+    <section class="section merch-section" id="merch">
       <div class="section-heading merch-section-heading">
         <p class="eyebrow">Featured Official Merch</p>
-        <h2>The SOLO Tokyo shirt.</h2>
+        <h2>Jude Pastor Solo – Official T-Shirt</h2>
         <p>
-          Pre-order the official event shirt and collect it at Cafe &amp; Diner Offza on September 27, 2026.
+          Pre-order the official JUDE PASTOR SOLO | Tokyo event shirt and collect it at
+          Cafe &amp; Diner Offza on September 27, 2026.
         </p>
       </div>
 
@@ -276,14 +277,14 @@ Ticket 2 - Ana Cruz"
         <figure class="merch-feature-visual">
           <span class="merch-feature-badge">Official Event Merch</span>
           <img
-            alt="Official Jude Pastor Solo Tokyo shirts in white and black"
             src="assets/jude-pastor-solo-merch.png"
+            alt="Official Jude Pastor Solo Tokyo shirts in white and black"
           />
         </figure>
 
         <div class="merch-feature-copy">
           <p class="ticket-label">Featured Drop</p>
-          <h3>JUDE PASTOR SOLO | Tokyo T-shirt</h3>
+          <h3>Jude Pastor Solo – Official T-Shirt</h3>
 
           <div class="merch-feature-price">
             <strong>¥5,000</strong>
@@ -291,14 +292,14 @@ Ticket 2 - Ana Cruz"
           </div>
 
           <p class="merch-description">
-            Available in black and white, with multiple sizes available.
-            Merchandise orders are separate from ticket bookings.
+            Available in black and white, with sizes from S to 3XL. Add multiple
+            colors and sizes in one merchandise order.
           </p>
 
           <div class="merch-feature-details">
             <div>
               <span>Colors</span>
-              <strong>Black / White</strong>
+              <strong>White / Black</strong>
             </div>
             <div>
               <span>Sizes</span>
@@ -311,149 +312,384 @@ Ticket 2 - Ana Cruz"
           </div>
 
           <button
-            aria-controls="merchOrderPanel"
-            aria-expanded="false"
             class="button primary merch-order-button"
             id="openMerchOrder"
             type="button"
+            aria-controls="merchOrderPanel"
+            aria-expanded="false"
           >
             Order Now
           </button>
 
           <p class="merch-order-caption">
-            Complete payment before submitting your separate merch pre-order.
+            Ticket and merchandise orders are submitted separately.
           </p>
         </div>
       </article>
 
-      <div class="merch-order-panel" hidden id="merchOrderPanel">
+      <div class="merch-order-panel" id="merchOrderPanel" hidden>
         <div class="merch-form-card">
           <div class="merch-form-header">
             <div>
-              <p class="eyebrow">Merch Pre-order Form</p>
-              <h3>Reserve your SOLO Tokyo shirt</h3>
-              <p>Select your color, size, quantity, and payment method.</p>
+              <p class="eyebrow">Official Merch Pre-order</p>
+              <h3>Build your shirt order</h3>
+              <p>Add every color, size, and quantity you would like to reserve.</p>
             </div>
 
             <button
-              aria-label="Close merchandise order form"
               class="merch-close-button"
               id="closeMerchOrder"
               type="button"
+              aria-label="Close merchandise order form"
             >
               ×
             </button>
           </div>
 
-          <div class="pickup-note">
-            <strong>Venue pickup</strong>
-            <span>Cafe &amp; Diner Offza • September 27, 2026</span>
+          <div class="fulfillment-notice">
+            <strong>Choose how to receive your order</strong>
+            <span>Pick up at the concert or request shipment to your address.</span>
           </div>
 
           <form class="merch-form" id="merchForm" novalidate>
-            <div class="form-grid">
-              <label>
-                Full Name
-                <input name="fullName" placeholder="Your full name" required type="text"/>
-              </label>
-
-              <label>
-                Email Address
-                <input name="email" placeholder="you@example.com" required type="email"/>
-              </label>
-
-              <label>
-                Contact Number
-                <input name="contactNumber" placeholder="+81 / +63 number" required type="tel"/>
-              </label>
-
-              <label>
-                Shirt Color
-                <select name="merchColor" required>
-                  <option value="">Select color</option>
-                  <option value="White">White</option>
-                  <option value="Black">Black</option>
-                </select>
-              </label>
-
-              <label>
-                Shirt Size
-                <select name="merchSize" required>
-                  <option value="">Select size</option>
-                  <option value="S">S</option>
-                  <option value="M">M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
-                  <option value="2XL">2XL</option>
-                  <option value="3XL">3XL</option>
-                </select>
-              </label>
-
-              <label>
-                Quantity
-                <select id="merchQuantity" name="quantity" required>
-                  <option value="">Select quantity</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </label>
-
-              <label>
-                Payment Method
-                <select id="merchPaymentMethod" name="paymentMethod" required>
-                  <option value="">Select payment method</option>
-                  <option value="PayPay">PayPay</option>
-                  <option value="Bank Transfer">Bank Transfer / JP Bank</option>
-                  <option value="PNB / PHP">PNB / PHP</option>
-                </select>
-              </label>
-
-              <label>
-                <span id="merchTotalAmountLabel">Merch Total</span>
-                <input id="merchTotalAmountDisplay" name="totalAmountDisplay" readonly type="text" value="¥0"/>
-                <input id="merchTotalAmount" name="totalAmount" type="hidden" value="0"/>
-                <input id="merchTotalCurrency" name="totalCurrency" type="hidden" value="JPY"/>
-                <input id="merchTotalAmountJPY" name="totalAmountJPY" type="hidden" value="0"/>
-                <input id="merchTotalAmountPHP" name="totalAmountPHP" type="hidden" value="0"/>
-                <input id="merchPhpConversionRate" name="phpConversionRate" type="hidden" value="0.40"/>
-              </label>
-
-              <div class="payment-details full-width" hidden id="merchPaymentDetails">
-                <div class="payment-details-header">
-                  <div>
-                    <p class="eyebrow">Payment Details</p>
-                    <h3 id="merchPaymentDetailsTitle">Select a payment method</h3>
-                  </div>
-                  <div class="payment-amount">
-                    <span>Amount to pay</span>
-                    <strong id="merchPaymentAmountText">¥0</strong>
-                  </div>
+            <section class="merch-form-section">
+              <div class="merch-form-section-heading">
+                <span class="step-number">01</span>
+                <div>
+                  <h4>Contact Information</h4>
+                  <p>Pending and confirmed order emails will be sent here.</p>
                 </div>
-                <div id="merchPaymentInfoContent"></div>
-                <p class="payment-note">
-                  After payment, enter your reference number below so we can verify your merch order.
-                </p>
               </div>
 
-              <label class="full-width payment-reference-field">
-                Payment Reference Number
-                <input
-                  id="merchPaymentReference"
-                  name="paymentReference"
-                  placeholder="Select payment method first"
-                  required
-                  type="text"
-                />
-              </label>
-            </div>
+              <div class="form-grid">
+                <label>
+                  Full Name
+                  <input name="fullName" placeholder="Your full name" required type="text"/>
+                </label>
+
+                <label>
+                  Email Address
+                  <input name="email" placeholder="you@example.com" required type="email"/>
+                </label>
+
+                <label class="full-width">
+                  Contact Number
+                  <input name="contactNumber" placeholder="+81 / +63 number" required type="tel"/>
+                </label>
+              </div>
+            </section>
+
+            <section class="merch-form-section">
+              <div class="merch-form-section-heading">
+                <span class="step-number">02</span>
+                <div>
+                  <h4>Delivery Method</h4>
+                  <p>Choose concert pickup or shipment before continuing.</p>
+                </div>
+              </div>
+
+              <div class="fulfillment-choice-grid">
+                <label class="fulfillment-option">
+                  <input
+                    type="radio"
+                    name="fulfillmentMethod"
+                    value="Concert pickup"
+                    checked
+                  />
+                  <span class="fulfillment-option-copy">
+                    <strong>Concert Pickup</strong>
+                    <small>
+                      Collect your order at Cafe &amp; Diner Offza on September 27, 2026.
+                    </small>
+                  </span>
+                </label>
+
+                <label class="fulfillment-option">
+                  <input
+                    type="radio"
+                    name="fulfillmentMethod"
+                    value="Shipment"
+                  />
+                  <span class="fulfillment-option-copy">
+                    <strong>Shipment</strong>
+                    <small>
+                      Limited shipping slots are available.
+                    </small>
+                  </span>
+                </label>
+              </div>
+
+              <div class="shipment-fields" id="shipmentFields" hidden>
+                <div class="shipping-fee-note">
+                  <strong>Shipping, packaging, and other applicable fees are not yet included in the merch total.</strong>
+                  <span>
+                    We will contact you with the final fee breakdown once your order is ready for shipment.
+                    Additional fees may include the shipping fee, packaging fee, handling fee,
+                    shipping insurance, customs duties or import taxes for international orders,
+                    and remote-area, re-delivery, or return-to-sender fees when applicable.
+                  </span>
+                </div>
+
+                <div class="form-grid">
+                  <label>
+                    Recipient Name
+                    <input
+                      id="shippingRecipient"
+                      name="shippingRecipient"
+                      placeholder="Name of recipient"
+                      type="text"
+                    />
+                  </label>
+
+                  <label>
+                    Country
+                    <select id="shippingCountry" name="shippingCountry">
+                      <option value="">Select country</option>
+                      <option value="Japan">Japan</option>
+                      <option value="Philippines">Philippines</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    Postal / ZIP Code
+                    <input
+                      id="shippingPostalCode"
+                      name="shippingPostalCode"
+                      placeholder="Postal or ZIP code"
+                      type="text"
+                    />
+                  </label>
+
+                  <label>
+                    Prefecture / Province / State
+                    <input
+                      id="shippingRegion"
+                      name="shippingRegion"
+                      placeholder="Prefecture, province, or state"
+                      type="text"
+                    />
+                  </label>
+
+                  <label>
+                    City / Municipality
+                    <input
+                      id="shippingCity"
+                      name="shippingCity"
+                      placeholder="City or municipality"
+                      type="text"
+                    />
+                  </label>
+
+                  <label class="full-width">
+                    Address Line 1
+                    <input
+                      id="shippingAddressLine1"
+                      name="shippingAddressLine1"
+                      placeholder="Street, barangay, building, house or unit number"
+                      type="text"
+                    />
+                  </label>
+
+                  <label class="full-width">
+                    Address Line 2 <span class="optional">optional</span>
+                    <input
+                      id="shippingAddressLine2"
+                      name="shippingAddressLine2"
+                      placeholder="Apartment, floor, landmark, or additional address details"
+                      type="text"
+                    />
+                  </label>
+
+                  <label class="full-width">
+                    Shipping Notes <span class="optional">optional</span>
+                    <textarea
+                      id="shippingNotes"
+                      name="shippingNotes"
+                      placeholder="Delivery instructions or other notes"
+                      rows="3"
+                    ></textarea>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section class="merch-form-section">
+              <div class="merch-form-section-heading">
+                <span class="step-number">03</span>
+                <div>
+                  <h4>Your Shirts</h4>
+                  <p>Add a new row for every different color or size.</p>
+                </div>
+              </div>
+
+              <div class="merch-items-list" id="merchItemsList">
+                <article class="merch-item-row" data-merch-row="1">
+                  <div class="merch-item-row-header">
+                    <div>
+                      <span class="merch-item-number">Shirt 1</span>
+                      <strong>Select color, size, and quantity</strong>
+                    </div>
+
+                    <button
+                      class="remove-merch-item"
+                      type="button"
+                      aria-label="Remove this shirt"
+                      hidden
+                    >
+                      Remove
+                    </button>
+                  </div>
+
+                  <div class="merch-item-fields">
+                    <label>
+                      Shirt Color
+                      <select class="merch-color" required>
+                        <option value="">Select color</option>
+                        <option value="White">White</option>
+                        <option value="Black">Black</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Shirt Size
+                      <select class="merch-size" required>
+                        <option value="">Select size</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="2XL">2XL</option>
+                        <option value="3XL">3XL</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Quantity
+                      <select class="merch-item-quantity" required>
+                        <option value="">Select quantity</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </label>
+
+                    <div class="merch-line-total">
+                      <span>Subtotal</span>
+                      <strong>¥0</strong>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <button
+                class="button secondary add-merch-item-button"
+                id="addMerchItem"
+                type="button"
+              >
+                + Add Another Shirt
+              </button>
+            </section>
+
+            <section class="merch-form-section">
+              <div class="merch-form-section-heading">
+                <span class="step-number">04</span>
+                <div>
+                  <h4>Order Summary</h4>
+                  <p>Review all shirt combinations before payment.</p>
+                </div>
+              </div>
+
+              <div class="merch-summary-card">
+                <div class="merch-summary-items" id="merchSummaryItems">
+                  <p class="empty-merch-summary">Your selected shirts will appear here.</p>
+                </div>
+
+                <div class="merch-summary-footer">
+                  <div>
+                    <span>Total Shirts</span>
+                    <strong id="merchTotalQuantity">0</strong>
+                  </div>
+
+                  <div class="merch-summary-grand-total">
+                    <span>Total Amount</span>
+                    <strong id="merchSummaryTotal">¥0</strong>
+                  </div>
+                </div>
+              </div>
+
+              <p class="merch-summary-note" id="merchFulfillmentSummary">
+                Concert pickup at Cafe &amp; Diner Offza on September 27, 2026.
+              </p>
+            </section>
+
+            <section class="merch-form-section">
+              <div class="merch-form-section-heading">
+                <span class="step-number">05</span>
+                <div>
+                  <h4>Payment</h4>
+                  <p>Complete payment before submitting the pre-order.</p>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <label>
+                  Payment Method
+                  <select id="merchPaymentMethod" name="paymentMethod" required>
+                    <option value="">Select payment method</option>
+                    <option value="PayPay">PayPay</option>
+                    <option value="Bank Transfer">Bank Transfer / JP Bank</option>
+                    <option value="PNB / PHP">PNB / PHP</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span id="merchTotalAmountLabel">Merch Total</span>
+                  <input id="merchTotalAmountDisplay" name="totalAmountDisplay" readonly type="text" value="¥0"/>
+                  <input id="merchTotalAmount" name="totalAmount" type="hidden" value="0"/>
+                  <input id="merchTotalCurrency" name="totalCurrency" type="hidden" value="JPY"/>
+                  <input id="merchTotalAmountJPY" name="totalAmountJPY" type="hidden" value="0"/>
+                  <input id="merchTotalAmountPHP" name="totalAmountPHP" type="hidden" value="0"/>
+                  <input id="merchPhpConversionRate" name="phpConversionRate" type="hidden" value="0.40"/>
+                </label>
+
+                <div class="payment-details full-width" id="merchPaymentDetails" hidden>
+                  <div class="payment-details-header">
+                    <div>
+                      <p class="eyebrow">Payment Details</p>
+                      <h3 id="merchPaymentDetailsTitle">Select a payment method</h3>
+                    </div>
+                    <div class="payment-amount">
+                      <span>Amount to pay</span>
+                      <strong id="merchPaymentAmountText">¥0</strong>
+                    </div>
+                  </div>
+                  <div id="merchPaymentInfoContent"></div>
+                  <p class="payment-note">
+                    Enter your transaction or transfer reference number after payment.
+                  </p>
+                </div>
+
+                <label class="full-width payment-reference-field">
+                  Payment Reference Number
+                  <input
+                    id="merchPaymentReference"
+                    name="paymentReference"
+                    placeholder="Select payment method first"
+                    required
+                    type="text"
+                  />
+                </label>
+              </div>
+            </section>
 
             <label class="agreement merch-agreement">
               <input name="agreement" required type="checkbox"/>
               <span>
-                I understand that this is a separate merchandise pre-order and that the item will be collected at the venue.
+                I understand that this is a separate merchandise pre-order. For shipment,
+                the shipping fee and delivery schedule will be confirmed separately.
               </span>
             </label>
 
@@ -463,10 +699,66 @@ Ticket 2 - Ana Cruz"
               </button>
             </div>
 
-            <p aria-live="polite" class="form-message" id="merchFormMessage" role="status"></p>
+            <p class="form-message" id="merchFormMessage" role="status" aria-live="polite"></p>
           </form>
         </div>
       </div>
+
+      <template id="merchItemTemplate">
+        <article class="merch-item-row" data-merch-row="">
+          <div class="merch-item-row-header">
+            <div>
+              <span class="merch-item-number">Shirt</span>
+              <strong>Select color, size, and quantity</strong>
+            </div>
+
+            <button class="remove-merch-item" type="button" aria-label="Remove this shirt">
+              Remove
+            </button>
+          </div>
+
+          <div class="merch-item-fields">
+            <label>
+              Shirt Color
+              <select class="merch-color" required>
+                <option value="">Select color</option>
+                <option value="White">White</option>
+                <option value="Black">Black</option>
+              </select>
+            </label>
+
+            <label>
+              Shirt Size
+              <select class="merch-size" required>
+                <option value="">Select size</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+                <option value="3XL">3XL</option>
+              </select>
+            </label>
+
+            <label>
+              Quantity
+              <select class="merch-item-quantity" required>
+                <option value="">Select quantity</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+
+            <div class="merch-line-total">
+              <span>Subtotal</span>
+              <strong>¥0</strong>
+            </div>
+          </div>
+        </article>
+      </template>
     </section>
   </main>
 
