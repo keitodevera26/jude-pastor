@@ -85,6 +85,16 @@ function formatPeso(value) {
   }).format(value || 0);
 }
 
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function getPHPAmount(jpyTotal) {
   return Math.round((jpyTotal || 0) * PHP_CONVERSION_RATE);
 }
@@ -568,7 +578,7 @@ function buildMerchPayload() {
     contactNumber: formData.get("contactNumber")?.trim(),
     socialMedia: "",
 
-    merchItem: "Official JUDE PASTOR SOLO | Tokyo T-shirt",
+    merchItem: "Jude Pastor Solo – Official T-Shirt",
     merchItems: items,
     merchColor: firstItem.color || "",
     merchSize: firstItem.size || "",
@@ -731,6 +741,14 @@ merchCloseButton.addEventListener("click", closeMerchOrderForm);
 addMerchItemButton.addEventListener("click", addMerchItemRow);
 
 merchItemsList.addEventListener("change", (event) => {
+  if (
+    event.target.matches(".merch-color, .merch-size, .merch-item-quantity")
+  ) {
+    updateMerchSummary();
+  }
+});
+
+merchItemsList.addEventListener("input", (event) => {
   if (
     event.target.matches(".merch-color, .merch-size, .merch-item-quantity")
   ) {
