@@ -28,7 +28,12 @@ const tierLinks = document.querySelectorAll("[data-tier-link]");
 
 // Separate merch form elements
 const merchForm = document.querySelector("#merchForm");
-const merchQuantity = document.querySelector("#merchQuantity");
+const merchItemsList = document.querySelector("#merchItemsList");
+const merchItemTemplate = document.querySelector("#merchItemTemplate");
+const addMerchItemButton = document.querySelector("#addMerchItem");
+const merchTotalQuantity = document.querySelector("#merchTotalQuantity");
+const merchSummaryItems = document.querySelector("#merchSummaryItems");
+const merchSummaryTotal = document.querySelector("#merchSummaryTotal");
 const merchPaymentMethod = document.querySelector("#merchPaymentMethod");
 const merchPaymentReference = document.querySelector("#merchPaymentReference");
 const merchPaymentDetails = document.querySelector("#merchPaymentDetails");
@@ -47,6 +52,22 @@ const merchFormMessage = document.querySelector("#merchFormMessage");
 const merchOrderButton = document.querySelector("#openMerchOrder");
 const merchOrderPanel = document.querySelector("#merchOrderPanel");
 const merchCloseButton = document.querySelector("#closeMerchOrder");
+const fulfillmentOptions = Array.from(
+  document.querySelectorAll('input[name="fulfillmentMethod"]')
+);
+const shipmentFields = document.querySelector("#shipmentFields");
+const shippingRecipient = document.querySelector("#shippingRecipient");
+const shippingCountry = document.querySelector("#shippingCountry");
+const shippingPostalCode = document.querySelector("#shippingPostalCode");
+const shippingRegion = document.querySelector("#shippingRegion");
+const shippingCity = document.querySelector("#shippingCity");
+const shippingAddressLine1 = document.querySelector("#shippingAddressLine1");
+const shippingAddressLine2 = document.querySelector("#shippingAddressLine2");
+const shippingNotes = document.querySelector("#shippingNotes");
+const merchFulfillmentSummary = document.querySelector("#merchFulfillmentSummary");
+const merchBuyerFullName = merchForm.querySelector('input[name="fullName"]');
+
+const MAX_MERCH_ROWS = 10;
 
 function formatYen(value) {
   return new Intl.NumberFormat("ja-JP", {
@@ -273,6 +294,26 @@ function validateTicketPayload(payload) {
     return "Please enter the attendee name/s.";
   }
 
+  if (!payload.fulfillmentMethod) {
+    return "Please choose concert pickup or shipment.";
+  }
+
+  if (payload.fulfillmentMethod === "Shipment") {
+    const requiredShippingFields = [
+      payload.shippingRecipient,
+      payload.shippingCountry,
+      payload.shippingPostalCode,
+      payload.shippingRegion,
+      payload.shippingCity,
+      payload.shippingAddressLine1,
+    ];
+
+    if (requiredShippingFields.some((value) => !value)) {
+      return "Please complete all required shipping address fields.";
+    }
+
+  }
+
   if (!payload.paymentMethod || !payload.paymentReferenceNumber) {
     return "Please select your payment method and enter your payment reference number.";
   }
@@ -337,8 +378,7 @@ function openMerchOrderForm() {
 
   window.setTimeout(() => {
     merchOrderPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-    const firstField = merchForm.querySelector("input, select, textarea");
-    firstField?.focus({ preventScroll: true });
+    merchForm.querySelector("input, select, textarea")?.focus({ preventScroll: true });
   }, 220);
 }
 
@@ -352,21 +392,143 @@ function closeMerchOrderForm() {
   }, 320);
 }
 
-// -------------------- Separate merch order --------------------
+// -------------------- Multiple-shirt merch order --------------------
 
-function getMerchTotalJPY() {
-  const qty = Number(merchQuantity.value || 0);
-  return MERCH_UNIT_PRICE_JPY * qty;
+function getMerchRows() {
+  return Array.from(merchItemsList.querySelectorAll(".merch-item-row"));
+}
+
+function readMerchItems() {
+  return getMerchRows().map((row) => {
+    const color = row.querySelector(".merch-color")?.value || "";
+    const size = row.querySelector(".merch-size")?.value || "";
+    const quantity = Number(row.querySelector(".merch-item-quantity")?.value || 0);
+
+    return {
+      color,
+      size,
+      quantity,
+      unitPriceJPY: MERCH_UNIT_PRICE_JPY,
+      lineTotalJPY: MERCH_UNIT_PRICE_JPY * quantity,
+    };
+  });
+}
+
+function updateMerchRowLabels() {
+  const rows = getMerchRows();
+
+  rows.forEach((row, index) => {
+    row.dataset.merchRow = String(index + 1);
+    row.querySelector(".merch-item-number").textContent = `Shirt ${index + 1}`;
+
+    const removeButton = row.querySelector(".remove-merch-item");
+    if (removeButton) removeButton.hidden = rows.length === 1;
+  });
+
+  addMerchItemButton.disabled = rows.length >= MAX_MERCH_ROWS;
+  addMerchItemButton.textContent =
+    rows.length >= MAX_MERCH_ROWS ? "Maximum of 10 shirt rows" : "+ Add Another Shirt";
+}
+
+function addMerchItemRow() {
+  if (getMerchRows().length >= MAX_MERCH_ROWS) return;
+
+  const fragment = merchItemTemplate.content.cloneNode(true);
+  merchItemsList.appendChild(fragment);
+  updateMerchRowLabels();
+  updateMerchSummary();
+
+  const newestRow = getMerchRows().at(-1);
+  newestRow?.querySelector("select")?.focus();
+}
+
+function removeMerchItemRow(row) {
+  if (getMerchRows().length <= 1) return;
+  row.remove();
+  updateMerchRowLabels();
+  updateMerchSummary();
+}
+
+function getSelectedFulfillmentMethod() {
+  return (
+    fulfillmentOptions.find((option) => option.checked)?.value ||
+    "Concert pickup"
+  );
+}
+
+function updateFulfillmentFields() {
+  const method = getSelectedFulfillmentMethod();
+  const isShipment = method === "Shipment";
+
+  shipmentFields.hidden = !isShipment;
+
+  [
+    shippingRecipient,
+    shippingCountry,
+    shippingPostalCode,
+    shippingRegion,
+    shippingCity,
+    shippingAddressLine1,
+  ].forEach((field) => {
+    field.required = isShipment;
+  });
+
+  if (isShipment && !shippingRecipient.value.trim()) {
+    shippingRecipient.value = merchBuyerFullName.value.trim();
+  }
+
+  merchFulfillmentSummary.textContent = isShipment
+    ? "Shipment selected. Limited slots are available. Shipping, packaging, and other applicable fees are not included in the merch total."
+    : "Concert pickup at Cafe & Diner Offza on September 27, 2026.";
 }
 
 function updateMerchPaymentReferencePlaceholder() {
   merchPaymentReference.placeholder = getPaymentReferencePlaceholder(merchPaymentMethod.value);
 }
 
-function updateMerchTotal() {
-  const jpyTotal = getMerchTotalJPY();
+function updateMerchSummary() {
+  const items = readMerchItems();
+  let totalQuantity = 0;
+  let jpyTotal = 0;
+  const completedItems = [];
+
+  getMerchRows().forEach((row, index) => {
+    const item = items[index];
+    const lineTotal = item.lineTotalJPY;
+    row.querySelector(".merch-line-total strong").textContent = formatYen(lineTotal);
+
+    if (item.quantity > 0) {
+      totalQuantity += item.quantity;
+      jpyTotal += lineTotal;
+    }
+
+    if (item.color && item.size && item.quantity > 0) completedItems.push(item);
+  });
+
   const phpTotal = getPHPAmount(jpyTotal);
   const isPNB = merchPaymentMethod.value === "PNB / PHP";
+
+  merchTotalQuantity.textContent = String(totalQuantity);
+  merchSummaryTotal.textContent = isPNB ? formatPeso(phpTotal) : formatYen(jpyTotal);
+
+  if (completedItems.length === 0) {
+    merchSummaryItems.innerHTML =
+      '<p class="empty-merch-summary">Your selected shirts will appear here.</p>';
+  } else {
+    merchSummaryItems.innerHTML = completedItems
+      .map(
+        (item) => `
+          <div class="merch-summary-line">
+            <div>
+              <strong>${escapeHTML(item.color)} / ${escapeHTML(item.size)}</strong>
+              <span>${item.quantity} shirt${item.quantity === 1 ? "" : "s"} × ${formatYen(MERCH_UNIT_PRICE_JPY)}</span>
+            </div>
+            <strong>${formatYen(item.lineTotalJPY)}</strong>
+          </div>
+        `
+      )
+      .join("");
+  }
 
   merchTotalAmountJPY.value = String(jpyTotal);
   merchTotalAmountPHP.value = String(phpTotal);
@@ -389,9 +551,12 @@ function updateMerchTotal() {
 
 function buildMerchPayload() {
   const formData = new FormData(merchForm);
-  const color = formData.get("merchColor");
-  const size = formData.get("merchSize");
+  const items = readMerchItems().filter(
+    (item) => item.color && item.size && item.quantity > 0
+  );
+  const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
   const buyerName = formData.get("fullName")?.trim();
+  const firstItem = items[0] || {};
 
   return {
     eventName: "JUDE PASTOR SOLO | Tokyo",
@@ -404,14 +569,32 @@ function buildMerchPayload() {
     socialMedia: "",
 
     merchItem: "Official JUDE PASTOR SOLO | Tokyo T-shirt",
-    merchColor: color,
-    merchSize: size,
+    merchItems: items,
+    merchColor: firstItem.color || "",
+    merchSize: firstItem.size || "",
     merchUnitPriceJPY: MERCH_UNIT_PRICE_JPY,
-    quantity: Number(formData.get("quantity")),
+    quantity: totalQty,
 
-    fulfillmentMethod: "Venue pickup",
-    pickupDate: "2026-09-27",
-    pickupVenue: "Cafe & Diner Offza",
+    fulfillmentMethod: formData.get("fulfillmentMethod") || "Concert pickup",
+    pickupDate:
+      formData.get("fulfillmentMethod") === "Shipment" ? "" : "2026-09-27",
+    pickupVenue:
+      formData.get("fulfillmentMethod") === "Shipment"
+        ? ""
+        : "Cafe & Diner Offza",
+
+    shippingRecipient: formData.get("shippingRecipient")?.trim() || "",
+    shippingCountry: formData.get("shippingCountry")?.trim() || "",
+    shippingPostalCode: formData.get("shippingPostalCode")?.trim() || "",
+    shippingRegion: formData.get("shippingRegion")?.trim() || "",
+    shippingCity: formData.get("shippingCity")?.trim() || "",
+    shippingAddressLine1: formData.get("shippingAddressLine1")?.trim() || "",
+    shippingAddressLine2: formData.get("shippingAddressLine2")?.trim() || "",
+    shippingNotes: formData.get("shippingNotes")?.trim() || "",
+    shippingFeeStatus:
+      formData.get("fulfillmentMethod") === "Shipment"
+        ? "To be confirmed separately"
+        : "Not applicable",
 
     paymentMethod: formData.get("paymentMethod"),
     paymentReferenceNumber: formData.get("paymentReference")?.trim(),
@@ -426,9 +609,7 @@ function buildMerchPayload() {
     agreement: formData.get("agreement") === "on",
     submittedAt: new Date().toISOString(),
 
-    // Compatibility fields for an existing ticket-oriented Apps Script.
-    // Your backend can use orderType to route this to a separate "Merch Orders" sheet.
-    ticketCategory: `Merch — ${color || ""} / ${size || ""}`.trim(),
+    ticketCategory: "Merch — Multiple shirt combinations",
     attendeeNames: buyerName,
   };
 }
@@ -438,12 +619,17 @@ function validateMerchPayload(payload) {
     return "Please complete your contact information.";
   }
 
-  if (!payload.merchColor || !payload.merchSize) {
-    return "Please select your shirt color and size.";
+  const rawRows = readMerchItems();
+  const hasIncompleteRow = rawRows.some(
+    (item) => !item.color || !item.size || !item.quantity
+  );
+
+  if (hasIncompleteRow) {
+    return "Please complete the color, size, and quantity for every shirt row.";
   }
 
-  if (!payload.quantity || payload.quantity < 1) {
-    return "Please select the merch quantity.";
+  if (!payload.merchItems.length || payload.quantity < 1) {
+    return "Please add at least one shirt to your order.";
   }
 
   if (!payload.paymentMethod || !payload.paymentReferenceNumber) {
@@ -451,7 +637,7 @@ function validateMerchPayload(payload) {
   }
 
   if (!payload.agreement) {
-    return "Please agree to the merchandise pickup terms before submitting.";
+    return "Please agree to the merchandise fulfillment terms before submitting.";
   }
 
   if (!APPS_SCRIPT_WEB_APP_URL || APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")) {
@@ -459,6 +645,19 @@ function validateMerchPayload(payload) {
   }
 
   return "";
+}
+
+function resetMerchOrderForm() {
+  merchForm.reset();
+
+  getMerchRows()
+    .slice(1)
+    .forEach((row) => row.remove());
+
+  updateMerchRowLabels();
+  updateMerchPaymentReferencePlaceholder();
+  updateFulfillmentFields();
+  updateMerchSummary();
 }
 
 async function submitMerchOrder(payload) {
@@ -482,9 +681,7 @@ async function submitMerchOrder(payload) {
       "success"
     );
 
-    merchForm.reset();
-    updateMerchPaymentReferencePlaceholder();
-    updateMerchTotal();
+    resetMerchOrderForm();
   } catch (fetchError) {
     console.error(fetchError);
     setMessage(
@@ -531,12 +728,40 @@ form.addEventListener("submit", async (event) => {
 // Featured merch CTA
 merchOrderButton.addEventListener("click", openMerchOrderForm);
 merchCloseButton.addEventListener("click", closeMerchOrderForm);
+addMerchItemButton.addEventListener("click", addMerchItemRow);
 
-// Merch event listeners
-merchQuantity.addEventListener("change", updateMerchTotal);
+merchItemsList.addEventListener("change", (event) => {
+  if (
+    event.target.matches(".merch-color, .merch-size, .merch-item-quantity")
+  ) {
+    updateMerchSummary();
+  }
+});
+
+merchItemsList.addEventListener("click", (event) => {
+  const removeButton = event.target.closest(".remove-merch-item");
+  if (!removeButton) return;
+
+  const row = removeButton.closest(".merch-item-row");
+  if (row) removeMerchItemRow(row);
+});
+
+fulfillmentOptions.forEach((option) => {
+  option.addEventListener("change", updateFulfillmentFields);
+});
+
+merchBuyerFullName.addEventListener("input", () => {
+  if (
+    getSelectedFulfillmentMethod() === "Shipment" &&
+    !shippingRecipient.value.trim()
+  ) {
+    shippingRecipient.value = merchBuyerFullName.value.trim();
+  }
+});
+
 merchPaymentMethod.addEventListener("change", () => {
   updateMerchPaymentReferencePlaceholder();
-  updateMerchTotal();
+  updateMerchSummary();
 });
 
 merchForm.addEventListener("submit", async (event) => {
@@ -556,8 +781,10 @@ merchForm.addEventListener("submit", async (event) => {
 // Initial state
 updateTicketPaymentReferencePlaceholder();
 updateTicketTotal();
+updateMerchRowLabels();
 updateMerchPaymentReferencePlaceholder();
-updateMerchTotal();
+updateFulfillmentFields();
+updateMerchSummary();
 
 // Small scroll animations
 const animatedItems = document.querySelectorAll(
