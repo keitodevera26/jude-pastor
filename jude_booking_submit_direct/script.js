@@ -37,35 +37,57 @@ const merchSummaryTotal = document.querySelector("#merchSummaryTotal");
 const merchPaymentMethod = document.querySelector("#merchPaymentMethod");
 const merchPaymentReference = document.querySelector("#merchPaymentReference");
 const merchPaymentDetails = document.querySelector("#merchPaymentDetails");
-const merchPaymentDetailsTitle = document.querySelector("#merchPaymentDetailsTitle");
-const merchPaymentInfoContent = document.querySelector("#merchPaymentInfoContent");
-const merchPaymentAmountText = document.querySelector("#merchPaymentAmountText");
-const merchTotalAmountLabel = document.querySelector("#merchTotalAmountLabel");
-const merchTotalAmountDisplay = document.querySelector("#merchTotalAmountDisplay");
+const merchPaymentDetailsTitle = document.querySelector(
+  "#merchPaymentDetailsTitle"
+);
+const merchPaymentInfoContent = document.querySelector(
+  "#merchPaymentInfoContent"
+);
+const merchPaymentAmountText = document.querySelector(
+  "#merchPaymentAmountText"
+);
+const merchTotalAmountLabel = document.querySelector(
+  "#merchTotalAmountLabel"
+);
+const merchTotalAmountDisplay = document.querySelector(
+  "#merchTotalAmountDisplay"
+);
 const merchTotalAmount = document.querySelector("#merchTotalAmount");
 const merchTotalCurrency = document.querySelector("#merchTotalCurrency");
 const merchTotalAmountJPY = document.querySelector("#merchTotalAmountJPY");
 const merchTotalAmountPHP = document.querySelector("#merchTotalAmountPHP");
-const merchPhpConversionRate = document.querySelector("#merchPhpConversionRate");
+const merchPhpConversionRate = document.querySelector(
+  "#merchPhpConversionRate"
+);
 const merchSubmitButton = document.querySelector("#merchSubmitButton");
 const merchFormMessage = document.querySelector("#merchFormMessage");
 const merchOrderButton = document.querySelector("#openMerchOrder");
 const merchOrderPanel = document.querySelector("#merchOrderPanel");
 const merchCloseButton = document.querySelector("#closeMerchOrder");
+
 const fulfillmentOptions = Array.from(
   document.querySelectorAll('input[name="fulfillmentMethod"]')
 );
+
 const shipmentFields = document.querySelector("#shipmentFields");
 const shippingRecipient = document.querySelector("#shippingRecipient");
 const shippingCountry = document.querySelector("#shippingCountry");
 const shippingPostalCode = document.querySelector("#shippingPostalCode");
 const shippingRegion = document.querySelector("#shippingRegion");
 const shippingCity = document.querySelector("#shippingCity");
-const shippingAddressLine1 = document.querySelector("#shippingAddressLine1");
-const shippingAddressLine2 = document.querySelector("#shippingAddressLine2");
+const shippingAddressLine1 = document.querySelector(
+  "#shippingAddressLine1"
+);
+const shippingAddressLine2 = document.querySelector(
+  "#shippingAddressLine2"
+);
 const shippingNotes = document.querySelector("#shippingNotes");
-const merchFulfillmentSummary = document.querySelector("#merchFulfillmentSummary");
-const merchBuyerFullName = merchForm.querySelector('input[name="fullName"]');
+const merchFulfillmentSummary = document.querySelector(
+  "#merchFulfillmentSummary"
+);
+const merchBuyerFullName = merchForm.querySelector(
+  'input[name="fullName"]'
+);
 
 const MAX_MERCH_ROWS = 10;
 
@@ -85,7 +107,6 @@ function formatPeso(value) {
   }).format(value || 0);
 }
 
-
 function escapeHTML(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -100,7 +121,9 @@ function getPHPAmount(jpyTotal) {
 }
 
 function getAmountText(method, jpyTotal, phpTotal) {
-  return method === "PNB / PHP" ? formatPeso(phpTotal) : formatYen(jpyTotal);
+  return method === "PNB / PHP"
+    ? formatPeso(phpTotal)
+    : formatYen(jpyTotal);
 }
 
 function getPaymentReferencePlaceholder(method) {
@@ -120,15 +143,23 @@ function getPaymentMarkup(method, phpTotal) {
       markup: `
         <div class="payment-layout single-qr">
           <div class="qr-card">
-            <img src="assets/paypay_qr2.jpg" alt="Kanto Sessions PayPay QR code" />
+            <img
+              src="assets/paypay_qr2.jpg"
+              alt="Kanto Sessions PayPay QR code"
+            />
           </div>
+
           <div class="payment-copy">
             <h4>Pay via PayPay</h4>
             <p>Scan the QR code and send the exact amount shown above.</p>
+
             <ul>
               <li>Payee: Kanto Sessions</li>
               <li>Currency: JPY</li>
-              <li>Reference: Enter your PayPay transaction/reference number below.</li>
+              <li>
+                Reference: Enter your PayPay transaction/reference
+                number below.
+              </li>
             </ul>
           </div>
         </div>
@@ -143,22 +174,63 @@ function getPaymentMarkup(method, phpTotal) {
         <div class="bank-grid">
           <div class="bank-card">
             <h4>Japan Post Bank → Japan Post Bank</h4>
+
             <dl class="payment-list">
-              <div><dt>Account Holder</dt><dd>Pastor Jude Ephraim Rubillos</dd></div>
-              <div><dt>Bank</dt><dd>Japan Post Bank (JP Bank)</dd></div>
-              <div><dt>Account Symbol / 記号</dt><dd>12090</dd></div>
-              <div><dt>Account Number / 番号</dt><dd>25952231</dd></div>
+              <div>
+                <dt>Account Holder</dt>
+                <dd>Pastor Jude Ephraim Rubillos</dd>
+              </div>
+
+              <div>
+                <dt>Bank</dt>
+                <dd>Japan Post Bank (JP Bank)</dd>
+              </div>
+
+              <div>
+                <dt>Account Symbol / 記号</dt>
+                <dd>12090</dd>
+              </div>
+
+              <div>
+                <dt>Account Number / 番号</dt>
+                <dd>25952231</dd>
+              </div>
             </dl>
           </div>
+
           <div class="bank-card">
             <h4>Other Bank → Japan Post Bank</h4>
+
             <dl class="payment-list">
-              <div><dt>Account Holder</dt><dd>Pastor Jude Ephraim Rubillos</dd></div>
-              <div><dt>Bank</dt><dd>Japan Post Bank (JP Bank)</dd></div>
-              <div><dt>Bank Code</dt><dd>9900</dd></div>
-              <div><dt>Branch Name</dt><dd>二〇八 (Nizerohachi)</dd></div>
-              <div><dt>Branch Code</dt><dd>208</dd></div>
-              <div><dt>Account Number</dt><dd>2595223</dd></div>
+              <div>
+                <dt>Account Holder</dt>
+                <dd>Pastor Jude Ephraim Rubillos</dd>
+              </div>
+
+              <div>
+                <dt>Bank</dt>
+                <dd>Japan Post Bank (JP Bank)</dd>
+              </div>
+
+              <div>
+                <dt>Bank Code</dt>
+                <dd>9900</dd>
+              </div>
+
+              <div>
+                <dt>Branch Name</dt>
+                <dd>二〇八 (Nizerohachi)</dd>
+              </div>
+
+              <div>
+                <dt>Branch Code</dt>
+                <dd>208</dd>
+              </div>
+
+              <div>
+                <dt>Account Number</dt>
+                <dd>2595223</dd>
+              </div>
             </dl>
           </div>
         </div>
@@ -172,14 +244,21 @@ function getPaymentMarkup(method, phpTotal) {
       markup: `
         <div class="payment-layout">
           <div class="qr-card pnb-qr">
-            <img src="assets/pnb-qr.png" alt="PNB InstaPay QR code" />
+            <img
+              src="assets/pnb-qr.png"
+              alt="PNB InstaPay QR code"
+            />
           </div>
+
           <div class="payment-copy">
             <h4>Pay via PNB / InstaPay</h4>
             <p>This is the amount you will pay in pesos.</p>
+
             <ul>
               <li>PHP Amount: ${formatPeso(phpTotal)}</li>
-              <li>Reference: Enter your PNB/InstaPay reference number below.</li>
+              <li>
+                Reference: Enter your PNB/InstaPay reference number below.
+              </li>
             </ul>
           </div>
         </div>
@@ -211,10 +290,15 @@ function renderPaymentDetails({
   }
 
   const payment = getPaymentMarkup(method, phpTotal);
+
   detailsElement.hidden = false;
   titleElement.textContent = payment.title;
   contentElement.innerHTML = payment.markup;
-  amountElement.textContent = getAmountText(method, jpyTotal, phpTotal);
+  amountElement.textContent = getAmountText(
+    method,
+    jpyTotal,
+    phpTotal
+  );
 }
 
 function setMessage(element, message, type = "") {
@@ -225,7 +309,9 @@ function setMessage(element, message, type = "") {
 // -------------------- Ticket booking --------------------
 
 function getTicketTotalJPY() {
-  const selectedOption = ticketCategory.options[ticketCategory.selectedIndex];
+  const selectedOption =
+    ticketCategory.options[ticketCategory.selectedIndex];
+
   const price = Number(selectedOption?.dataset?.price || 0);
   const qty = Number(quantity.value || 0);
 
@@ -233,7 +319,8 @@ function getTicketTotalJPY() {
 }
 
 function updateTicketPaymentReferencePlaceholder() {
-  paymentReference.placeholder = getPaymentReferencePlaceholder(paymentMethod.value);
+  paymentReference.placeholder =
+    getPaymentReferencePlaceholder(paymentMethod.value);
 }
 
 function updateTicketTotal() {
@@ -246,8 +333,14 @@ function updateTicketTotal() {
   phpConversionRate.value = String(PHP_CONVERSION_RATE);
   totalCurrency.value = isPNB ? "PHP" : "JPY";
   totalAmount.value = String(isPNB ? phpTotal : jpyTotal);
-  totalAmountDisplay.value = isPNB ? formatPeso(phpTotal) : formatYen(jpyTotal);
-  totalAmountLabel.textContent = isPNB ? "Total Amount (PHP)" : "Total Amount";
+
+  totalAmountDisplay.value = isPNB
+    ? formatPeso(phpTotal)
+    : formatYen(jpyTotal);
+
+  totalAmountLabel.textContent = isPNB
+    ? "Total Amount (PHP)"
+    : "Total Amount";
 
   renderPaymentDetails({
     method: paymentMethod.value,
@@ -277,14 +370,18 @@ function buildTicketPayload() {
     attendeeNames: formData.get("attendeeNames")?.trim(),
 
     paymentMethod: formData.get("paymentMethod"),
-    paymentReferenceNumber: formData.get("paymentReference")?.trim(),
+    paymentReferenceNumber:
+      formData.get("paymentReference")?.trim(),
+
     proofOfPaymentUrl: "",
 
     totalAmount: Number(formData.get("totalAmount")),
     totalCurrency: formData.get("totalCurrency"),
     totalAmountJPY: Number(formData.get("totalAmountJPY")),
     totalAmountPHP: Number(formData.get("totalAmountPHP")),
-    phpConversionRate: Number(formData.get("phpConversionRate")),
+    phpConversionRate: Number(
+      formData.get("phpConversionRate")
+    ),
 
     agreement: formData.get("agreement") === "on",
     submittedAt: new Date().toISOString(),
@@ -292,11 +389,19 @@ function buildTicketPayload() {
 }
 
 function validateTicketPayload(payload) {
-  if (!payload.fullName || !payload.email || !payload.contactNumber) {
+  if (
+    !payload.fullName ||
+    !payload.email ||
+    !payload.contactNumber
+  ) {
     return "Please complete your buyer information.";
   }
 
-  if (!payload.ticketCategory || !payload.quantity || payload.quantity < 1) {
+  if (
+    !payload.ticketCategory ||
+    !payload.quantity ||
+    payload.quantity < 1
+  ) {
     return "Please select your ticket category and quantity.";
   }
 
@@ -304,27 +409,10 @@ function validateTicketPayload(payload) {
     return "Please enter the attendee name/s.";
   }
 
-  if (!payload.fulfillmentMethod) {
-    return "Please choose concert pickup or shipment.";
-  }
-
-  if (payload.fulfillmentMethod === "Shipment") {
-    const requiredShippingFields = [
-      payload.shippingRecipient,
-      payload.shippingCountry,
-      payload.shippingPostalCode,
-      payload.shippingRegion,
-      payload.shippingCity,
-      payload.shippingAddressLine1,
-    ];
-
-    if (requiredShippingFields.some((value) => !value)) {
-      return "Please complete all required shipping address fields.";
-    }
-
-  }
-
-  if (!payload.paymentMethod || !payload.paymentReferenceNumber) {
+  if (
+    !payload.paymentMethod ||
+    !payload.paymentReferenceNumber
+  ) {
     return "Please select your payment method and enter your payment reference number.";
   }
 
@@ -332,7 +420,10 @@ function validateTicketPayload(payload) {
     return "Please agree to the ticket policy before submitting.";
   }
 
-  if (!APPS_SCRIPT_WEB_APP_URL || APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")) {
+  if (
+    !APPS_SCRIPT_WEB_APP_URL ||
+    APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")
+  ) {
     return "Please add your Google Apps Script Web App URL in script.js first.";
   }
 
@@ -342,7 +433,11 @@ function validateTicketPayload(payload) {
 async function submitTicketBooking(payload) {
   submitButton.disabled = true;
   submitButton.textContent = "Submitting...";
-  setMessage(formMessage, "Sending your booking...");
+
+  setMessage(
+    formMessage,
+    "Sending your booking..."
+  );
 
   try {
     await fetch(APPS_SCRIPT_WEB_APP_URL, {
@@ -365,6 +460,7 @@ async function submitTicketBooking(payload) {
     updateTicketTotal();
   } catch (fetchError) {
     console.error(fetchError);
+
     setMessage(
       formMessage,
       "Something went wrong. Please try again or contact the organizer.",
@@ -387,8 +483,14 @@ function openMerchOrderForm() {
   });
 
   window.setTimeout(() => {
-    merchOrderPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-    merchForm.querySelector("input, select, textarea")?.focus({ preventScroll: true });
+    merchOrderPanel.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+    merchForm
+      .querySelector("input, select, textarea")
+      ?.focus({ preventScroll: true });
   }, 220);
 }
 
@@ -405,14 +507,22 @@ function closeMerchOrderForm() {
 // -------------------- Multiple-shirt merch order --------------------
 
 function getMerchRows() {
-  return Array.from(merchItemsList.querySelectorAll(".merch-item-row"));
+  return Array.from(
+    merchItemsList.querySelectorAll(".merch-item-row")
+  );
 }
 
 function readMerchItems() {
   return getMerchRows().map((row) => {
-    const color = row.querySelector(".merch-color")?.value || "";
-    const size = row.querySelector(".merch-size")?.value || "";
-    const quantity = Number(row.querySelector(".merch-item-quantity")?.value || 0);
+    const color =
+      row.querySelector(".merch-color")?.value || "";
+
+    const size =
+      row.querySelector(".merch-size")?.value || "";
+
+    const quantity = Number(
+      row.querySelector(".merch-item-quantity")?.value || 0
+    );
 
     return {
       color,
@@ -429,22 +539,39 @@ function updateMerchRowLabels() {
 
   rows.forEach((row, index) => {
     row.dataset.merchRow = String(index + 1);
-    row.querySelector(".merch-item-number").textContent = `Shirt ${index + 1}`;
 
-    const removeButton = row.querySelector(".remove-merch-item");
-    if (removeButton) removeButton.hidden = rows.length === 1;
+    row.querySelector(
+      ".merch-item-number"
+    ).textContent = `Shirt ${index + 1}`;
+
+    const removeButton = row.querySelector(
+      ".remove-merch-item"
+    );
+
+    if (removeButton) {
+      removeButton.hidden = rows.length === 1;
+    }
   });
 
-  addMerchItemButton.disabled = rows.length >= MAX_MERCH_ROWS;
+  addMerchItemButton.disabled =
+    rows.length >= MAX_MERCH_ROWS;
+
   addMerchItemButton.textContent =
-    rows.length >= MAX_MERCH_ROWS ? "Maximum of 10 shirt rows" : "+ Add Another Shirt";
+    rows.length >= MAX_MERCH_ROWS
+      ? "Maximum of 10 shirt rows"
+      : "+ Add Another Shirt";
 }
 
 function addMerchItemRow() {
-  if (getMerchRows().length >= MAX_MERCH_ROWS) return;
+  if (getMerchRows().length >= MAX_MERCH_ROWS) {
+    return;
+  }
 
-  const fragment = merchItemTemplate.content.cloneNode(true);
+  const fragment =
+    merchItemTemplate.content.cloneNode(true);
+
   merchItemsList.appendChild(fragment);
+
   updateMerchRowLabels();
   updateMerchSummary();
 
@@ -453,16 +580,21 @@ function addMerchItemRow() {
 }
 
 function removeMerchItemRow(row) {
-  if (getMerchRows().length <= 1) return;
+  if (getMerchRows().length <= 1) {
+    return;
+  }
+
   row.remove();
+
   updateMerchRowLabels();
   updateMerchSummary();
 }
 
 function getSelectedFulfillmentMethod() {
   return (
-    fulfillmentOptions.find((option) => option.checked)?.value ||
-    "Concert pickup"
+    fulfillmentOptions.find(
+      (option) => option.checked
+    )?.value || "Concert pickup"
   );
 }
 
@@ -483,8 +615,12 @@ function updateFulfillmentFields() {
     field.required = isShipment;
   });
 
-  if (isShipment && !shippingRecipient.value.trim()) {
-    shippingRecipient.value = merchBuyerFullName.value.trim();
+  if (
+    isShipment &&
+    !shippingRecipient.value.trim()
+  ) {
+    shippingRecipient.value =
+      merchBuyerFullName.value.trim();
   }
 
   merchFulfillmentSummary.textContent = isShipment
@@ -493,33 +629,52 @@ function updateFulfillmentFields() {
 }
 
 function updateMerchPaymentReferencePlaceholder() {
-  merchPaymentReference.placeholder = getPaymentReferencePlaceholder(merchPaymentMethod.value);
+  merchPaymentReference.placeholder =
+    getPaymentReferencePlaceholder(
+      merchPaymentMethod.value
+    );
 }
 
 function updateMerchSummary() {
   const items = readMerchItems();
+
   let totalQuantity = 0;
   let jpyTotal = 0;
+
   const completedItems = [];
 
   getMerchRows().forEach((row, index) => {
     const item = items[index];
     const lineTotal = item.lineTotalJPY;
-    row.querySelector(".merch-line-total strong").textContent = formatYen(lineTotal);
+
+    row.querySelector(
+      ".merch-line-total strong"
+    ).textContent = formatYen(lineTotal);
 
     if (item.quantity > 0) {
       totalQuantity += item.quantity;
       jpyTotal += lineTotal;
     }
 
-    if (item.color && item.size && item.quantity > 0) completedItems.push(item);
+    if (
+      item.color &&
+      item.size &&
+      item.quantity > 0
+    ) {
+      completedItems.push(item);
+    }
   });
 
   const phpTotal = getPHPAmount(jpyTotal);
-  const isPNB = merchPaymentMethod.value === "PNB / PHP";
+  const isPNB =
+    merchPaymentMethod.value === "PNB / PHP";
 
-  merchTotalQuantity.textContent = String(totalQuantity);
-  merchSummaryTotal.textContent = isPNB ? formatPeso(phpTotal) : formatYen(jpyTotal);
+  merchTotalQuantity.textContent =
+    String(totalQuantity);
+
+  merchSummaryTotal.textContent = isPNB
+    ? formatPeso(phpTotal)
+    : formatYen(jpyTotal);
 
   if (completedItems.length === 0) {
     merchSummaryItems.innerHTML =
@@ -530,10 +685,21 @@ function updateMerchSummary() {
         (item) => `
           <div class="merch-summary-line">
             <div>
-              <strong>${escapeHTML(item.color)} / ${escapeHTML(item.size)}</strong>
-              <span>${item.quantity} shirt${item.quantity === 1 ? "" : "s"} × ${formatYen(MERCH_UNIT_PRICE_JPY)}</span>
+              <strong>
+                ${escapeHTML(item.color)} /
+                ${escapeHTML(item.size)}
+              </strong>
+
+              <span>
+                ${item.quantity}
+                shirt${item.quantity === 1 ? "" : "s"}
+                × ${formatYen(MERCH_UNIT_PRICE_JPY)}
+              </span>
             </div>
-            <strong>${formatYen(item.lineTotalJPY)}</strong>
+
+            <strong>
+              ${formatYen(item.lineTotalJPY)}
+            </strong>
           </div>
         `
       )
@@ -542,11 +708,23 @@ function updateMerchSummary() {
 
   merchTotalAmountJPY.value = String(jpyTotal);
   merchTotalAmountPHP.value = String(phpTotal);
-  merchPhpConversionRate.value = String(PHP_CONVERSION_RATE);
-  merchTotalCurrency.value = isPNB ? "PHP" : "JPY";
-  merchTotalAmount.value = String(isPNB ? phpTotal : jpyTotal);
-  merchTotalAmountDisplay.value = isPNB ? formatPeso(phpTotal) : formatYen(jpyTotal);
-  merchTotalAmountLabel.textContent = isPNB ? "Merch Total (PHP)" : "Merch Total";
+  merchPhpConversionRate.value =
+    String(PHP_CONVERSION_RATE);
+
+  merchTotalCurrency.value =
+    isPNB ? "PHP" : "JPY";
+
+  merchTotalAmount.value = String(
+    isPNB ? phpTotal : jpyTotal
+  );
+
+  merchTotalAmountDisplay.value = isPNB
+    ? formatPeso(phpTotal)
+    : formatYen(jpyTotal);
+
+  merchTotalAmountLabel.textContent = isPNB
+    ? "Merch Total (PHP)"
+    : "Merch Total";
 
   renderPaymentDetails({
     method: merchPaymentMethod.value,
@@ -561,12 +739,27 @@ function updateMerchSummary() {
 
 function buildMerchPayload() {
   const formData = new FormData(merchForm);
+
   const items = readMerchItems().filter(
-    (item) => item.color && item.size && item.quantity > 0
+    (item) =>
+      item.color &&
+      item.size &&
+      item.quantity > 0
   );
-  const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-  const buyerName = formData.get("fullName")?.trim();
+
+  const totalQty = items.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const buyerName =
+    formData.get("fullName")?.trim();
+
   const firstItem = items[0] || {};
+
+  const fulfillmentMethod =
+    formData.get("fulfillmentMethod") ||
+    "Concert pickup";
 
   return {
     eventName: "JUDE PASTOR SOLO | Tokyo",
@@ -575,74 +768,152 @@ function buildMerchPayload() {
 
     fullName: buyerName,
     email: formData.get("email")?.trim(),
-    contactNumber: formData.get("contactNumber")?.trim(),
+    contactNumber:
+      formData.get("contactNumber")?.trim(),
     socialMedia: "",
 
-    merchItem: "Jude Pastor Solo – Official T-Shirt",
+    merchItem:
+      "Jude Pastor Solo – Official T-Shirt",
+
     merchItems: items,
     merchColor: firstItem.color || "",
     merchSize: firstItem.size || "",
     merchUnitPriceJPY: MERCH_UNIT_PRICE_JPY,
     quantity: totalQty,
 
-    fulfillmentMethod: formData.get("fulfillmentMethod") || "Concert pickup",
+    fulfillmentMethod,
+
     pickupDate:
-      formData.get("fulfillmentMethod") === "Shipment" ? "" : "2026-09-27",
+      fulfillmentMethod === "Shipment"
+        ? ""
+        : "2026-09-27",
+
     pickupVenue:
-      formData.get("fulfillmentMethod") === "Shipment"
+      fulfillmentMethod === "Shipment"
         ? ""
         : "Cafe & Diner Offza",
 
-    shippingRecipient: formData.get("shippingRecipient")?.trim() || "",
-    shippingCountry: formData.get("shippingCountry")?.trim() || "",
-    shippingPostalCode: formData.get("shippingPostalCode")?.trim() || "",
-    shippingRegion: formData.get("shippingRegion")?.trim() || "",
-    shippingCity: formData.get("shippingCity")?.trim() || "",
-    shippingAddressLine1: formData.get("shippingAddressLine1")?.trim() || "",
-    shippingAddressLine2: formData.get("shippingAddressLine2")?.trim() || "",
-    shippingNotes: formData.get("shippingNotes")?.trim() || "",
+    shippingRecipient:
+      formData.get("shippingRecipient")?.trim() || "",
+
+    shippingCountry:
+      formData.get("shippingCountry")?.trim() || "",
+
+    shippingPostalCode:
+      formData.get("shippingPostalCode")?.trim() || "",
+
+    shippingRegion:
+      formData.get("shippingRegion")?.trim() || "",
+
+    shippingCity:
+      formData.get("shippingCity")?.trim() || "",
+
+    shippingAddressLine1:
+      formData.get("shippingAddressLine1")?.trim() || "",
+
+    shippingAddressLine2:
+      formData.get("shippingAddressLine2")?.trim() || "",
+
+    shippingNotes:
+      formData.get("shippingNotes")?.trim() || "",
+
     shippingFeeStatus:
-      formData.get("fulfillmentMethod") === "Shipment"
+      fulfillmentMethod === "Shipment"
         ? "To be confirmed separately"
         : "Not applicable",
 
-    paymentMethod: formData.get("paymentMethod"),
-    paymentReferenceNumber: formData.get("paymentReference")?.trim(),
+    paymentMethod:
+      formData.get("paymentMethod"),
+
+    paymentReferenceNumber:
+      formData.get("paymentReference")?.trim(),
+
     proofOfPaymentUrl: "",
 
-    totalAmount: Number(formData.get("totalAmount")),
-    totalCurrency: formData.get("totalCurrency"),
-    totalAmountJPY: Number(formData.get("totalAmountJPY")),
-    totalAmountPHP: Number(formData.get("totalAmountPHP")),
-    phpConversionRate: Number(formData.get("phpConversionRate")),
+    totalAmount:
+      Number(formData.get("totalAmount")),
 
-    agreement: formData.get("agreement") === "on",
-    submittedAt: new Date().toISOString(),
+    totalCurrency:
+      formData.get("totalCurrency"),
 
-    ticketCategory: "Merch — Multiple shirt combinations",
+    totalAmountJPY:
+      Number(formData.get("totalAmountJPY")),
+
+    totalAmountPHP:
+      Number(formData.get("totalAmountPHP")),
+
+    phpConversionRate:
+      Number(formData.get("phpConversionRate")),
+
+    agreement:
+      formData.get("agreement") === "on",
+
+    submittedAt:
+      new Date().toISOString(),
+
+    ticketCategory:
+      "Merch — Multiple shirt combinations",
+
     attendeeNames: buyerName,
   };
 }
 
 function validateMerchPayload(payload) {
-  if (!payload.fullName || !payload.email || !payload.contactNumber) {
+  if (
+    !payload.fullName ||
+    !payload.email ||
+    !payload.contactNumber
+  ) {
     return "Please complete your contact information.";
   }
 
   const rawRows = readMerchItems();
+
   const hasIncompleteRow = rawRows.some(
-    (item) => !item.color || !item.size || !item.quantity
+    (item) =>
+      !item.color ||
+      !item.size ||
+      !item.quantity
   );
 
   if (hasIncompleteRow) {
     return "Please complete the color, size, and quantity for every shirt row.";
   }
 
-  if (!payload.merchItems.length || payload.quantity < 1) {
+  if (
+    !payload.merchItems.length ||
+    payload.quantity < 1
+  ) {
     return "Please add at least one shirt to your order.";
   }
 
-  if (!payload.paymentMethod || !payload.paymentReferenceNumber) {
+  if (!payload.fulfillmentMethod) {
+    return "Please choose concert pickup or shipment.";
+  }
+
+  if (payload.fulfillmentMethod === "Shipment") {
+    const requiredShippingFields = [
+      payload.shippingRecipient,
+      payload.shippingCountry,
+      payload.shippingPostalCode,
+      payload.shippingRegion,
+      payload.shippingCity,
+      payload.shippingAddressLine1,
+    ];
+
+    if (
+      requiredShippingFields.some(
+        (value) => !value
+      )
+    ) {
+      return "Please complete all required shipping address fields.";
+    }
+  }
+
+  if (
+    !payload.paymentMethod ||
+    !payload.paymentReferenceNumber
+  ) {
     return "Please select your payment method and enter your payment reference number.";
   }
 
@@ -650,7 +921,10 @@ function validateMerchPayload(payload) {
     return "Please agree to the merchandise fulfillment terms before submitting.";
   }
 
-  if (!APPS_SCRIPT_WEB_APP_URL || APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")) {
+  if (
+    !APPS_SCRIPT_WEB_APP_URL ||
+    APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")
+  ) {
     return "Please add your Google Apps Script Web App URL in script.js first.";
   }
 
@@ -673,7 +947,11 @@ function resetMerchOrderForm() {
 async function submitMerchOrder(payload) {
   merchSubmitButton.disabled = true;
   merchSubmitButton.textContent = "Submitting...";
-  setMessage(merchFormMessage, "Sending your merch pre-order...");
+
+  setMessage(
+    merchFormMessage,
+    "Sending your merch pre-order..."
+  );
 
   try {
     await fetch(APPS_SCRIPT_WEB_APP_URL, {
@@ -694,6 +972,7 @@ async function submitMerchOrder(payload) {
     resetMerchOrderForm();
   } catch (fetchError) {
     console.error(fetchError);
+
     setMessage(
       merchFormMessage,
       "Something went wrong. Please try again or contact the organizer.",
@@ -701,13 +980,23 @@ async function submitMerchOrder(payload) {
     );
   } finally {
     merchSubmitButton.disabled = false;
-    merchSubmitButton.textContent = "Submit Merch Pre-order";
+    merchSubmitButton.textContent =
+      "Submit Merch Pre-order";
   }
 }
 
-// Ticket event listeners
-ticketCategory.addEventListener("change", updateTicketTotal);
-quantity.addEventListener("change", updateTicketTotal);
+// -------------------- Ticket event listeners --------------------
+
+ticketCategory.addEventListener(
+  "change",
+  updateTicketTotal
+);
+
+quantity.addEventListener(
+  "change",
+  updateTicketTotal
+);
+
 paymentMethod.addEventListener("change", () => {
   updateTicketPaymentReferencePlaceholder();
   updateTicketTotal();
@@ -715,116 +1004,203 @@ paymentMethod.addEventListener("change", () => {
 
 tierLinks.forEach((link) => {
   link.addEventListener("click", () => {
-    ticketCategory.value = link.dataset.tierLink;
+    ticketCategory.value =
+      link.dataset.tierLink;
+
     updateTicketTotal();
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    form.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   });
 });
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+form.addEventListener(
+  "submit",
+  async (event) => {
+    event.preventDefault();
 
-  const payload = buildTicketPayload();
-  const error = validateTicketPayload(payload);
+    const payload = buildTicketPayload();
+    const error =
+      validateTicketPayload(payload);
 
-  if (error) {
-    setMessage(formMessage, error, "error");
-    return;
+    if (error) {
+      setMessage(
+        formMessage,
+        error,
+        "error"
+      );
+
+      return;
+    }
+
+    await submitTicketBooking(payload);
   }
+);
 
-  await submitTicketBooking(payload);
-});
+// -------------------- Merch event listeners --------------------
 
-// Featured merch CTA
-merchOrderButton.addEventListener("click", openMerchOrderForm);
-merchCloseButton.addEventListener("click", closeMerchOrderForm);
-addMerchItemButton.addEventListener("click", addMerchItemRow);
+merchOrderButton.addEventListener(
+  "click",
+  openMerchOrderForm
+);
 
-merchItemsList.addEventListener("change", (event) => {
-  if (
-    event.target.matches(".merch-color, .merch-size, .merch-item-quantity")
-  ) {
-    updateMerchSummary();
+merchCloseButton.addEventListener(
+  "click",
+  closeMerchOrderForm
+);
+
+addMerchItemButton.addEventListener(
+  "click",
+  addMerchItemRow
+);
+
+merchItemsList.addEventListener(
+  "change",
+  (event) => {
+    if (
+      event.target.matches(
+        ".merch-color, .merch-size, .merch-item-quantity"
+      )
+    ) {
+      updateMerchSummary();
+    }
   }
-});
+);
 
-merchItemsList.addEventListener("input", (event) => {
-  if (
-    event.target.matches(".merch-color, .merch-size, .merch-item-quantity")
-  ) {
-    updateMerchSummary();
+merchItemsList.addEventListener(
+  "input",
+  (event) => {
+    if (
+      event.target.matches(
+        ".merch-color, .merch-size, .merch-item-quantity"
+      )
+    ) {
+      updateMerchSummary();
+    }
   }
-});
+);
 
-merchItemsList.addEventListener("click", (event) => {
-  const removeButton = event.target.closest(".remove-merch-item");
-  if (!removeButton) return;
+merchItemsList.addEventListener(
+  "click",
+  (event) => {
+    const removeButton = event.target.closest(
+      ".remove-merch-item"
+    );
 
-  const row = removeButton.closest(".merch-item-row");
-  if (row) removeMerchItemRow(row);
-});
+    if (!removeButton) {
+      return;
+    }
+
+    const row = removeButton.closest(
+      ".merch-item-row"
+    );
+
+    if (row) {
+      removeMerchItemRow(row);
+    }
+  }
+);
 
 fulfillmentOptions.forEach((option) => {
-  option.addEventListener("change", updateFulfillmentFields);
+  option.addEventListener(
+    "change",
+    updateFulfillmentFields
+  );
 });
 
-merchBuyerFullName.addEventListener("input", () => {
-  if (
-    getSelectedFulfillmentMethod() === "Shipment" &&
-    !shippingRecipient.value.trim()
-  ) {
-    shippingRecipient.value = merchBuyerFullName.value.trim();
+merchBuyerFullName.addEventListener(
+  "input",
+  () => {
+    if (
+      getSelectedFulfillmentMethod() ===
+        "Shipment" &&
+      !shippingRecipient.value.trim()
+    ) {
+      shippingRecipient.value =
+        merchBuyerFullName.value.trim();
+    }
   }
-});
+);
 
-merchPaymentMethod.addEventListener("change", () => {
-  updateMerchPaymentReferencePlaceholder();
-  updateMerchSummary();
-});
-
-merchForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const payload = buildMerchPayload();
-  const error = validateMerchPayload(payload);
-
-  if (error) {
-    setMessage(merchFormMessage, error, "error");
-    return;
+merchPaymentMethod.addEventListener(
+  "change",
+  () => {
+    updateMerchPaymentReferencePlaceholder();
+    updateMerchSummary();
   }
+);
 
-  await submitMerchOrder(payload);
-});
+merchForm.addEventListener(
+  "submit",
+  async (event) => {
+    event.preventDefault();
 
-// Initial state
+    const payload = buildMerchPayload();
+    const error =
+      validateMerchPayload(payload);
+
+    if (error) {
+      setMessage(
+        merchFormMessage,
+        error,
+        "error"
+      );
+
+      return;
+    }
+
+    await submitMerchOrder(payload);
+  }
+);
+
+// -------------------- Initial state --------------------
+
 updateTicketPaymentReferencePlaceholder();
 updateTicketTotal();
+
 updateMerchRowLabels();
 updateMerchPaymentReferencePlaceholder();
 updateFulfillmentFields();
 updateMerchSummary();
 
-// Small scroll animations
+// -------------------- Small scroll animations --------------------
+
 const animatedItems = document.querySelectorAll(
   ".section-heading, .two-column > div, .ticket-card, .merch-feature, .booking-form, .policy-box, .site-footer"
 );
 
 if ("IntersectionObserver" in window) {
-  animatedItems.forEach((item) => item.classList.add("reveal-on-scroll"));
+  animatedItems.forEach((item) => {
+    item.classList.add("reveal-on-scroll");
+  });
 
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
+  const revealObserver =
+    new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(
+              "is-visible"
+            );
 
-  animatedItems.forEach((item) => revealObserver.observe(item));
+            revealObserver.unobserve(
+              entry.target
+            );
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+      }
+    );
+
+  animatedItems.forEach((item) => {
+    revealObserver.observe(item);
+  });
 } else {
-  animatedItems.forEach((item) => item.classList.add("is-visible"));
+  animatedItems.forEach((item) => {
+    item.classList.add("is-visible");
+  });
 }
