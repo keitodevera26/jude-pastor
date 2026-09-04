@@ -1199,8 +1199,62 @@ if ("IntersectionObserver" in window) {
   animatedItems.forEach((item) => {
     revealObserver.observe(item);
   });
-} else {
+} else 
   animatedItems.forEach((item) => {
     item.classList.add("is-visible");
   });
 }
+
+
+/* =========================================
+   SOLD OUT LOCK — INNER CIRCLE
+========================================= */
+
+(() => {
+  const ticketSelect = document.getElementById("ticketCategory");
+  const bookingForm = document.getElementById("bookingForm");
+
+  if (!ticketSelect) return;
+
+  const innerCircleOption = ticketSelect.querySelector(
+    'option[value="Inner Circle"]'
+  );
+
+  // Force Inner Circle to stay disabled
+  if (innerCircleOption) {
+    innerCircleOption.disabled = true;
+    innerCircleOption.textContent =
+      "Inner Circle — ¥6,500 — SOLD OUT";
+  }
+
+  // If old JS somehow selected it, reset it
+  if (ticketSelect.value === "Inner Circle") {
+    ticketSelect.value = "";
+  }
+
+  // Extra protection when changing ticket
+  ticketSelect.addEventListener("change", () => {
+    if (ticketSelect.value === "Inner Circle") {
+      ticketSelect.value = "";
+
+      alert(
+        "Inner Circle is sold out. Please select Room Seat."
+      );
+    }
+  });
+
+  // Final protection before booking submission
+  if (bookingForm) {
+    bookingForm.addEventListener("submit", (event) => {
+      if (ticketSelect.value === "Inner Circle") {
+        event.preventDefault();
+
+        ticketSelect.value = "";
+
+        alert(
+          "Inner Circle is sold out. Please select Room Seat."
+        );
+      }
+    });
+  }
+})();
