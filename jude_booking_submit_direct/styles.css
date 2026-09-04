@@ -1715,7 +1715,6 @@ body {
   .fulfillment-option {
     min-height: auto;
   }
-}
 .ticket-card.sold-out {
   position: relative;
   overflow: hidden;
