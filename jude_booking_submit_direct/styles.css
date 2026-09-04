@@ -1716,3 +1716,24 @@ body {
     min-height: auto;
   }
 }
+.ticket-card.sold-out {
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-card.sold-out .sold-out-ribbon {
+  position: absolute;
+  top: 18px;
+  right: -48px;
+  background: #e53935;
+  color: #fff;
+  padding: 8px 56px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(40deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  z-index: 2;
+  pointer-events: none;
+}
