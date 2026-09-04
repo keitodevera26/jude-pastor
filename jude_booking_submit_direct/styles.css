@@ -1736,3 +1736,33 @@ body {
   z-index: 2;
   pointer-events: none;
 }
+
+  /* SOLD OUT RIBBON */
+.ticket-card.sold-out {
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-card.sold-out .sold-out-ribbon {
+  position: absolute;
+  top: 24px;
+  right: -50px;
+
+  width: 190px;
+  padding: 10px 0;
+
+  background: #ef3d36;
+  color: #ffffff;
+
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+
+  transform: rotate(42deg);
+
+  z-index: 10;
+  pointer-events: none;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
