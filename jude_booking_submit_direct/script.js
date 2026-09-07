@@ -1199,7 +1199,7 @@ if ("IntersectionObserver" in window) {
   animatedItems.forEach((item) => {
     revealObserver.observe(item);
   });
-} else 
+} else {
   animatedItems.forEach((item) => {
     item.classList.add("is-visible");
   });
