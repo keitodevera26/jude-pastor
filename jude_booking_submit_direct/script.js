@@ -144,7 +144,7 @@ function getPaymentMarkup(method, phpTotal) {
         <div class="payment-layout single-qr">
           <div class="qr-card">
             <img
-              src="assets/paypay_qr3.jpg"
+              src="assets/paypay_qr4.jpeg"
               alt="Kanto Sessions PayPay QR code"
             />
           </div>
