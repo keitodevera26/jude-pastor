@@ -2143,3 +2143,13 @@ body {
   #tokyo-highlights .tokyo-collage-grid-full { grid-template-rows: 132px 218px 132px; gap: 7px; }
   #merch .merch-feature-copy { padding: 16px; }
 }
+/* Hide remaining slots and pending review counts */
+#tickets .tier-availability {
+  display: none !important;
+}
+
+/* Keep booking buttons aligned */
+#tickets .ticket-card-footer {
+  margin-top: auto;
+  gap: 0;
+}
