@@ -1250,7 +1250,7 @@ function onOsakaInventory(payload) {
     const el = document.querySelector(`[data-availability="${tier}"]`);
     const opt = [...ticketCategory.options].find(x => x.value === tier);
     const link = [...document.querySelectorAll('[data-tier-link]')].find(x => x.dataset.tierLink === tier);
-    if (el) el.textContent = remaining <= 0 ? 'SOLD OUT' : `${remaining} left · ${Number(item.pending||0)} awaiting review`;
+     if (el) el.textContent = '';
     if (opt) opt.disabled = remaining <= 0;
     if (link) {
       link.setAttribute('aria-disabled', String(remaining <= 0));
