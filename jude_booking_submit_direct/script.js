@@ -1,6 +1,5 @@
 // Google Apps Script Web App URL
-const APPS_SCRIPT_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbzRogsbGomF7zD8UBWnauuYjFfMayGebzp75Zc0Z2eYcgPPPT6VvVKuYR8gwSkcJ9626Q/exec";
+const APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbylBC5qgvqPIqYh1W2cecsiExtV76BxBM7LZ7tBq2eGg8z70c7-SOo2uBGwjH7vG5hP/exec"; // AFTER deploying Osaka Apps Script, paste the /exec URL here. Keep empty before launch.
 
 const PHP_CONVERSION_RATE = 0.4;
 const MERCH_UNIT_PRICE_JPY = 5000;
@@ -144,8 +143,8 @@ function getPaymentMarkup(method, phpTotal) {
         <div class="payment-layout single-qr">
           <div class="qr-card">
             <img
-              src="assets/paypay_qr4.jpeg"
-              alt="Kanto Sessions PayPay QR code"
+              src="assets/osaka-paypay-qr.png"
+              alt="Updated PayPay QR code for Jude Pastor Solo Osaka"
             />
           </div>
 
@@ -154,7 +153,7 @@ function getPaymentMarkup(method, phpTotal) {
             <p>Scan the QR code and send the exact amount shown above.</p>
 
             <ul>
-              <li>Payee: Kanto Sessions</li>
+              <li>Use the displayed QR code and verify the recipient in PayPay before sending.</li>
               <li>Currency: JPY</li>
               <li>
                 Reference: Enter your PayPay transaction/reference
@@ -357,7 +356,7 @@ function buildTicketPayload() {
   const formData = new FormData(form);
 
   return {
-    eventName: "JUDE PASTOR SOLO | Tokyo",
+    eventName: "JUDE PASTOR SOLO | Osaka",
     orderType: "TICKET",
 
     fullName: formData.get("fullName")?.trim(),
@@ -385,6 +384,7 @@ function buildTicketPayload() {
 
     agreement: formData.get("agreement") === "on",
     submittedAt: new Date().toISOString(),
+    clientRequestId: createOsakaRequestId(),
   };
 }
 
@@ -424,10 +424,52 @@ function validateTicketPayload(payload) {
     !APPS_SCRIPT_WEB_APP_URL ||
     APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")
   ) {
-    return "Please add your Google Apps Script Web App URL in script.js first.";
+    return "Osaka online booking is not yet connected. Please contact the organizer.";
   }
 
   return "";
+}
+
+// Read-only JSONP bridge: Google Apps Script ContentService does not offer
+// browser-readable cross-origin POST responses for a static hosted website.
+function createOsakaRequestId() {
+  return 'WEB-' + (globalThis.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+}
+function osakaApiRead(action, params = {}, timeoutMs = 9000) {
+  return new Promise((resolve, reject) => {
+    if (!APPS_SCRIPT_WEB_APP_URL) return reject(new Error('Backend not deployed'));
+    const callback = '__osakaReply_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+    let done = false;
+    const cleanup = () => { delete window[callback]; script.remove(); clearTimeout(timer); };
+    window[callback] = (payload) => { if (done) return; done = true; cleanup(); resolve(payload); };
+    const timer = setTimeout(() => { if (done) return; done = true; cleanup(); reject(new Error('Backend check timed out')); }, timeoutMs);
+    script.onerror = () => { if (done) return; done = true; cleanup(); reject(new Error('Cannot reach booking backend')); };
+    const url = new URL(APPS_SCRIPT_WEB_APP_URL);
+    url.searchParams.set('action', action);
+    url.searchParams.set('callback', callback);
+    url.searchParams.set('_', String(Date.now()));
+    Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+    script.src = url.toString(); document.head.appendChild(script);
+  });
+}
+async function sendOsakaOrder(payload) {
+  // The write request is sent via no-cors; the receipt MUST be confirmed through
+  // a separate READ-only lookup. Never treat fetch resolution as booking success.
+  await fetch(APPS_SCRIPT_WEB_APP_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  });
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await new Promise(resolve => setTimeout(resolve, attempt ? 1800 : 1000));
+    try {
+      const result = await osakaApiRead('receipt', {requestId: payload.clientRequestId}, 5000);
+      if (result.success && result.found) return result;
+    } catch (error) { console.warn('Receipt check pending:', error.message); }
+  }
+  throw new Error('We could not verify this submission. Please check for an email or contact the organizer with reference ' + payload.clientRequestId + '. Do NOT submit or pay twice.');
 }
 
 async function submitTicketBooking(payload) {
@@ -440,20 +482,8 @@ async function submitTicketBooking(payload) {
   );
 
   try {
-    await fetch(APPS_SCRIPT_WEB_APP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    setMessage(
-      formMessage,
-      "Booking submitted! Please check your email for the pending verification message.",
-      "success"
-    );
+    const receipt = await sendOsakaOrder(payload);
+    setMessage(formMessage, `Booking received! Reference: ${receipt.orderId}. Payment verification is still pending.`, 'success');
 
     form.reset();
     updateTicketPaymentReferencePlaceholder();
@@ -625,7 +655,7 @@ function updateFulfillmentFields() {
 
   merchFulfillmentSummary.textContent = isShipment
     ? "Shipment selected. Limited slots are available. Shipping, packaging, and other applicable fees are not included in the merch total."
-    : "Concert pickup at Cafe & Diner Offza on September 27, 2026.";
+    : "Concert pickup at Naniwa GROWUP on December 5, 2026.";
 }
 
 function updateMerchPaymentReferencePlaceholder() {
@@ -762,7 +792,7 @@ function buildMerchPayload() {
     "Concert pickup";
 
   return {
-    eventName: "JUDE PASTOR SOLO | Tokyo",
+    eventName: "JUDE PASTOR SOLO | Osaka",
     orderType: "MERCH",
     orderLabel: "Official Merch Pre-order",
 
@@ -786,12 +816,12 @@ function buildMerchPayload() {
     pickupDate:
       fulfillmentMethod === "Shipment"
         ? ""
-        : "2026-09-27",
+        : "2026-12-05",
 
     pickupVenue:
       fulfillmentMethod === "Shipment"
         ? ""
-        : "Cafe & Diner Offza",
+        : "Naniwa GROWUP",
 
     shippingRecipient:
       formData.get("shippingRecipient")?.trim() || "",
@@ -850,6 +880,7 @@ function buildMerchPayload() {
 
     submittedAt:
       new Date().toISOString(),
+    clientRequestId: createOsakaRequestId(),
 
     ticketCategory:
       "Merch — Multiple shirt combinations",
@@ -925,7 +956,7 @@ function validateMerchPayload(payload) {
     !APPS_SCRIPT_WEB_APP_URL ||
     APPS_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR")
   ) {
-    return "Please add your Google Apps Script Web App URL in script.js first.";
+    return "Osaka online booking is not yet connected. Please contact the organizer.";
   }
 
   return "";
@@ -954,20 +985,8 @@ async function submitMerchOrder(payload) {
   );
 
   try {
-    await fetch(APPS_SCRIPT_WEB_APP_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    setMessage(
-      merchFormMessage,
-      "Merch pre-order submitted! Please check your email for the pending verification message.",
-      "success"
-    );
+    const receipt = await sendOsakaOrder(payload);
+    setMessage(merchFormMessage, `T-shirt pre-order received! Reference: ${receipt.orderId}. Payment verification is pending.`, 'success');
 
     resetMerchOrderForm();
   } catch (fetchError) {
@@ -1035,6 +1054,18 @@ form.addEventListener(
       return;
     }
 
+    try {
+      const inventory = await osakaApiRead('availability');
+      onOsakaInventory(inventory);
+      const item = inventory.inventory?.find(x => x.category === payload.ticketCategory);
+      if (!item || Number(item.left) < payload.quantity) {
+        setMessage(formMessage, 'Sorry, there are not enough available tickets in this category.', 'error');
+        return;
+      }
+    } catch (err) {
+      setMessage(formMessage, 'Cannot verify current ticket availability. Please try again later.', 'error');
+      return;
+    }
     await submitTicketBooking(payload);
   }
 );
@@ -1206,55 +1237,61 @@ if ("IntersectionObserver" in window) {
 }
 
 
-/* =========================================
-   SOLD OUT LOCK — INNER CIRCLE
-========================================= */
 
-(() => {
-  const ticketSelect = document.getElementById("ticketCategory");
-  const bookingForm = document.getElementById("bookingForm");
-
-  if (!ticketSelect) return;
-
-  const innerCircleOption = ticketSelect.querySelector(
-    'option[value="Inner Circle"]'
-  );
-
-  // Force Inner Circle to stay disabled
-  if (innerCircleOption) {
-    innerCircleOption.disabled = true;
-    innerCircleOption.textContent =
-      "Inner Circle — ¥6,500 — SOLD OUT";
-  }
-
-  // If old JS somehow selected it, reset it
-  if (ticketSelect.value === "Inner Circle") {
-    ticketSelect.value = "";
-  }
-
-  // Extra protection when changing ticket
-  ticketSelect.addEventListener("change", () => {
-    if (ticketSelect.value === "Inner Circle") {
-      ticketSelect.value = "";
-
-      alert(
-        "Inner Circle is sold out. Please select Room Seat."
-      );
+// Osaka live inventory from backend (confirmed only; pending shown separately).
+let osakaInventorySnapshot = null;
+function onOsakaInventory(payload) {
+  if (!payload?.success || !Array.isArray(payload.inventory)) return;
+  osakaInventorySnapshot = payload.inventory;
+  for (const item of payload.inventory) {
+    const tier = item.category;
+    const remaining = Number(item.left);
+    if (!Number.isFinite(remaining)) continue;
+    const el = document.querySelector(`[data-availability="${tier}"]`);
+    const opt = [...ticketCategory.options].find(x => x.value === tier);
+    const link = [...document.querySelectorAll('[data-tier-link]')].find(x => x.dataset.tierLink === tier);
+    if (el) el.textContent = remaining <= 0 ? 'SOLD OUT' : `${remaining} left · ${Number(item.pending||0)} awaiting review`;
+    if (opt) opt.disabled = remaining <= 0;
+    if (link) {
+      link.setAttribute('aria-disabled', String(remaining <= 0));
+      link.textContent = remaining <= 0 ? 'SOLD OUT' : `Select ${tier}`;
+      link.classList.toggle('is-sold-out', remaining <= 0);
     }
+    if (remaining <= 0 && ticketCategory.value === tier) {
+      ticketCategory.value = '';
+      updateTicketTotal();
+    }
+  }
+}
+async function refreshOsakaInventory() {
+  if (!APPS_SCRIPT_WEB_APP_URL) return;
+  try { onOsakaInventory(await osakaApiRead('availability')); }
+  catch (err) { console.warn('Inventory not available:', err.message); }
+}
+refreshOsakaInventory();
+setInterval(refreshOsakaInventory, 60000);
+
+// TOKYO HIGHLIGHTS: editorial collage lightbox
+(() => {
+  const lightbox = document.getElementById('tokyoLightbox');
+  if (!lightbox) return;
+  const lightboxImage = document.getElementById('tokyoLightboxImage');
+  const lightboxCaption = document.getElementById('tokyoLightboxCaption');
+  const closeButton = document.getElementById('tokyoLightboxClose');
+  const collageItems = Array.from(document.querySelectorAll('.tokyo-collage-item'));
+
+  collageItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const img = item.querySelector('img');
+      lightboxImage.src = item.dataset.lightboxSrc || img.src;
+      lightboxImage.alt = img.alt;
+      lightboxCaption.textContent = item.dataset.lightboxCaption || img.alt;
+      lightbox.showModal();
+    });
   });
 
-  // Final protection before booking submission
-  if (bookingForm) {
-    bookingForm.addEventListener("submit", (event) => {
-      if (ticketSelect.value === "Inner Circle") {
-        event.preventDefault();
-
-        ticketSelect.value = "";
-
-        alert(
-          "Inner Circle is sold out. Please select Room Seat."
-        );
-      }
-    });
-  }
+  closeButton?.addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('click', (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
 })();
