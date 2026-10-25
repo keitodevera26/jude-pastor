@@ -1941,11 +1941,11 @@ body {
   padding-left: 20px;
 }
 #tickets .osaka-ticket-grid .tier-inclusions li::before {
-  content: 'âœ“';
+  content: "\2713" !important;
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--accent);
+  color: #e5a15d;
   font-weight: 800;
 }
 #tickets .osaka-ticket-grid .ticket-card-footer {
